@@ -48,7 +48,7 @@ def create_app(test_config=None):
     Create an endpoint to handle GET requests
     for all available categories.
     """
-    @app.route("/categories")
+    @app.route("/categories", methods=["GET"])
     def retrieve_categories():
         categories = Category.query.order_by(Category.type).all()
 
@@ -74,7 +74,7 @@ def create_app(test_config=None):
     ten questions per page and pagination at the bottom of the screen for three pages.
     Clicking on the page numbers should update the questions.
     """
-    @app.route("/questions")
+    @app.route("/questions", methods=["GET"])
     def retrieve_questions():
         selection = Question.query.order_by(Question.id).all()
         current_questions = paginate_questions(request, selection)
@@ -156,7 +156,7 @@ def create_app(test_config=None):
 
         except:
             abort(422)
-
+            
     """
     @TODO:
     Create a POST endpoint to get questions based on a search term.
@@ -186,6 +186,7 @@ def create_app(test_config=None):
 
         except:
             abort(404)
+
     """
     @TODO:
     Create a GET endpoint to get questions based on category.
@@ -194,8 +195,26 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that
     category to be shown.
     """
-    
+    @app.route("/categories/<int:category_id>/questions", methods=["GET"])
+    def retrieve_questions_by_category(category_id):
+        category = Category.query.filter(Category.id == category_id).one_or_none()
 
+        if category is None:
+            abort(404)
+
+        questions_in_category = Question.query.order_by(Question.id).filter(Question.category == str(category_id)).all()
+
+        if questions_in_category is None:
+            abort(404)
+
+        current_questions = paginate_questions(request, questions_in_category)
+
+        return jsonify({
+            "success": True,
+            "category": category.type,
+            "questions": current_questions,
+            "total_questions": len(questions_in_category)
+        })
 
     """
     @TODO:
