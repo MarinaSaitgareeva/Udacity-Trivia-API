@@ -27,17 +27,17 @@ def create_app(test_config=None):
     """
     @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
     """
-    CORS(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     """
     @TODO: Use the after_request decorator to set Access-Control-Allow
     """
     @app.after_request
     def after_request(response):
-        response.header.add(
+        response.headers.add(
             "Access-Control-Allow-Headers", "Content-Type,Authorization,true"
         )
-        response.header.ad(
+        response.headers.add(
             "Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"
         )
 
@@ -147,13 +147,10 @@ def create_app(test_config=None):
             question = Question(question=new_question, answer=new_answer, difficulty=new_difficulty, category=new_category)
             question.insert()
 
-            selection = Question.query.order_by(Question.id).all()
-            current_questions = paginate_questions(request, selection)
-
             return jsonify({
                 "success": True,
                 "added": question.id,
-                "questions": current_questions,
+                "new_question": question.question,
                 "total_questions": len(Question.query.all())
             })
 
@@ -183,7 +180,8 @@ def create_app(test_config=None):
                 return jsonify({
                     "success": True,
                     "questions": current_questions,
-                    "total_questions": len(selection.all())
+                    "total_questions": len(selection.all()),
+                    "current_category": None
                 })
 
         except:
@@ -196,6 +194,8 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that
     category to be shown.
     """
+    
+
 
     """
     @TODO:
