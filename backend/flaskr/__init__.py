@@ -8,7 +8,7 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-def paginate_questions(request, selection)
+def paginate_questions(request, selection):
     page = request.args.get("page", 1, type=int)
     start = (page-1) * QUESTIONS_PER_PAGE
     end = start + QUESTIONS_PER_PAGE
@@ -132,7 +132,7 @@ def create_app(test_config=None):
     of the questions list in the "List" tab.
     """
     @app.route("/questions", methods=["POST"])
-    def create_question():
+    def add_question():
         body = request.get_json()
 
         if not ("question" in body and "answer" in body and "difficulty" in body and "category" in body):
@@ -152,7 +152,7 @@ def create_app(test_config=None):
 
             return jsonify({
                 "success": True,
-                "created": question.id,
+                "added": question.id,
                 "questions": current_questions,
                 "total_questions": len(Question.query.all())
             })
@@ -170,7 +170,24 @@ def create_app(test_config=None):
     only question that include that string within their question.
     Try using the word "title" to start.
     """
+    @app.route("/questions/search", methods=["POST"])
+    def search_questions():
+        body = request.get_json
+        search_term = body.get("searchTerm", None)
 
+        try:
+            if search_term:
+                selection = Question.query.order_by(Question.id).filter(Question.question.ilike("%{}%".format(search_term)))
+                current_questions = paginate_questions(request, selection)
+
+                return jsonify({
+                    "success": True,
+                    "questions": current_questions,
+                    "total_questions": len(selection.all())
+                })
+
+        except:
+            abort(404)
     """
     @TODO:
     Create a GET endpoint to get questions based on category.
