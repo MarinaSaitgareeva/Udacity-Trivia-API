@@ -169,18 +169,18 @@ def create_app(test_config=None):
     """
     @app.route("/questions/search", methods=["POST"])
     def search_questions():
-        body = request.get_json
+        body = request.get_json()
         search_term = body.get("searchTerm", None)
 
         try:
             if search_term:
-                selection = Question.query.order_by(Question.id).filter(Question.question.ilike("%{}%".format(search_term)))
+                selection = Question.query.order_by(Question.id).filter(Question.question.ilike(f"%{search_term}%")).all()
                 current_questions = paginate_questions(request, selection)
 
                 return jsonify({
                     "success": True,
                     "questions": current_questions,
-                    "total_questions": len(selection.all()),
+                    "total_questions": len(selection),
                     "current_category": None
                 })
 
@@ -227,6 +227,34 @@ def create_app(test_config=None):
     one question at a time is displayed, the user is allowed to answer
     and shown whether they were correct or not.
     """
+    @app.route("/quizzes", methods=["POST"])
+    def add_quiz():
+        body = request.get_json
+
+        if not ("quizCategory" in body and "previousQuestions" in body):
+            abort(422)
+
+        category = body.get("quizCategory", None)
+        previous_questions = body.get("previosQuestions", None)
+        # correct_answer = body.get("numCorrect", None)
+        # force_end = body.get("forceEnd", None)
+
+        try:
+            if category["type"] == "click":
+                available_questions = Question.query.filter(Question.id.not_in((previous_questions))).all()
+            else:
+                available_questions = Question.query.filter_by(category=category['id']).filter(Question.id.not_in((previous_questions))).all()
+            
+            new_question = available_questions[random.randrange(0, len(available_questions))].format() if len(available_questions) > 0 else None
+
+            return jsonify({
+                "success": True,
+                "question": new_question
+            })
+        
+        except:
+            abort(422)
+
 
     """
     @TODO:
@@ -235,4 +263,3 @@ def create_app(test_config=None):
     """
 
     return app
-
