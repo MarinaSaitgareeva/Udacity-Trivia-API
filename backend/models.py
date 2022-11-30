@@ -3,8 +3,8 @@ from sqlalchemy import Column, String, Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 
-database_name = 'trivia'
-database_path = 'postgresql://{}/{}'.format('localhost:5432', database_name)
+database_name = "trivia"
+database_path = "postgresql://{}/{}".format("localhost:5432", database_name)
 
 db = SQLAlchemy()
 
@@ -15,16 +15,18 @@ setup_db(app)
 def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["DEBUG"] = True
     db.app = app
     db.init_app(app)
-    db.create_all()
+    with app.app_context():
+        db.create_all()
 
 """
 Question
 
 """
 class Question(db.Model):
-    __tablename__ = 'questions'
+    __tablename__ = "questions"
 
     id = Column(Integer, primary_key=True)
     question = Column(String)
@@ -51,19 +53,19 @@ class Question(db.Model):
 
     def format(self):
         return {
-            'id': self.id,
-            'question': self.question,
-            'answer': self.answer,
-            'category': self.category,
-            'difficulty': self.difficulty
-            }
+            "id": self.id,
+            "question": self.question,
+            "answer": self.answer,
+            "category": self.category,
+            "difficulty": self.difficulty
+        }
 
 """
 Category
 
 """
 class Category(db.Model):
-    __tablename__ = 'categories'
+    __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True)
     type = Column(String)
@@ -73,6 +75,6 @@ class Category(db.Model):
 
     def format(self):
         return {
-            'id': self.id,
-            'type': self.type
-            }
+            "id": self.id,
+            "type": self.type
+        }
