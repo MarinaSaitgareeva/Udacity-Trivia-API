@@ -229,13 +229,13 @@ def create_app(test_config=None):
     """
     @app.route("/quizzes", methods=["POST"])
     def add_quiz():
-        body = request.get_json
+        body = request.get_json()
 
-        if not ("quizCategory" in body and "previousQuestions" in body):
+        if not ("quiz_category" in body and "previous_questions" in body):
             abort(422)
 
-        category = body.get("quizCategory", None)
-        previous_questions = body.get("previosQuestions", None)
+        category = body.get("quiz_category", None)
+        previous_questions = body.get("previous_questions", None)
         # correct_answer = body.get("numCorrect", None)
         # force_end = body.get("forceEnd", None)
 
