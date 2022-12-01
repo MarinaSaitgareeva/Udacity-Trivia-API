@@ -11,6 +11,7 @@
   margin-inline: 10px;
   border-radius: 8px;
   padding: 5px;
+  border: 1px solid lightblue;
 }
 
 #add-form {
