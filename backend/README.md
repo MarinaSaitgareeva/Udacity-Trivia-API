@@ -143,14 +143,14 @@ One note before you delve into your tasks: for each endpoint, you are expected t
 - Request Arguments: question_id (integer) - the question id.
 - Returns:
     - `success` - the success flag.
-    - `deleted` - the question id.
+    - `deleted_question_id` - the question id.
     - `questions` - a list of questions paginated by 10 items per page.
     - `total_questions` - number of total questions.
 
 ```json
 {
   "success": true,
-  "deleted": 1,
+  "deleted_question_id": 1,
   "questions": [
     {
       "answer": "Apollo 13",
@@ -182,15 +182,15 @@ One note before you delve into your tasks: for each endpoint, you are expected t
     - category (int)
 - Returns:
     - `success` - the success flag.
-    - `added` - the new question ID.
-    - `new_question` - the new question string.
+    - `created_question_id` - the new question ID.
+    - `created_question_text` - the new question string.
     - `total_questions` - number of total questions.
 
 ```json
 {
   "success": true,
-  "added": 25,
-  "new_question": "What is ...?",
+  "created_question_id": 25,
+  "created_question_text": "What is ...?",
   "total_questions": 20
 }
 ```
