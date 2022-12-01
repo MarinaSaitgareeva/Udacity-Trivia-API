@@ -300,14 +300,12 @@ def create_app(test_config=None):
                                          ) \
                                          .filter(Question.id.not_in((
                                                     previous_questions
-                                         ))) \
-                                         .all()
+                                         ))).all()
             else:
                 quiz_questions = Question.query \
                                          .filter(Question.id.not_in((
                                                     previous_questions
-                                         ))) \
-                                         .all()
+                                         ))).all()
 
             if len(quiz_questions) > 0:
                 question = quiz_questions[
