@@ -19,11 +19,21 @@
 
 h2 {
   text-align: center;
+  cursor: pointer;
+}
+
+h2:hover {
+  color: dodgerblue;
 }
 
 li {
   text-align: center;
-  margin: 5px 0px;
+  margin: 5px 5px;
+  cursor: pointer;
+}
+
+li:hover {
+  color: dodgerblue;
 }
 
 ul {
@@ -36,4 +46,12 @@ form {
   flex-direction: column;
   width: 80%;
   margin: auto;
+}
+
+input {
+  border-radius: 10px;
+  border: 1px solid lightblue;
+  padding: 4px;
+  padding-left: 10px;
+  margin-block: 10px;
 }
